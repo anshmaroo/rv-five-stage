@@ -1,6 +1,6 @@
 import chisel3._
-
 import scala.math.log
+
 class CSRFile(size: Int, xlen: Int) extends Module {
   val io = IO(new Bundle {
     val addr = Input(UInt((log(size)/log(2)).toInt.W))

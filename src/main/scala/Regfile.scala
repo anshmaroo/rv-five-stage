@@ -1,7 +1,5 @@
 import chisel3._
 
-import scala.math._
-
 class Regfile(xlen: Int) extends Module {
   val io = IO(new Bundle {
     val rdIndex0 = Input(UInt(5.W));
@@ -12,7 +10,7 @@ class Regfile(xlen: Int) extends Module {
 
     val rd0 = Output(UInt(xlen.W));
     val rd1 = Output(UInt(xlen.W));
-    val debugRegs = Output(Vec(32, UInt(32.W)))
+    val debugRegs = Output(Vec(32, UInt(xlen.W)))
   })
 
 
@@ -26,5 +24,8 @@ class Regfile(xlen: Int) extends Module {
 
   io.rd0 := regs(io.rdIndex0);
   io.rd1 := regs(io.rdIndex1)
+  
+  // Connect debug registers element by element
   io.debugRegs := regs
+
 }

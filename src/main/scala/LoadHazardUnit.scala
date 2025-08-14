@@ -1,5 +1,4 @@
 import chisel3._
-import chisel3.util._
 import scala.math.log
 
 class LoadHazardUnit(xlen: Int) extends Module {
@@ -7,15 +6,15 @@ class LoadHazardUnit(xlen: Int) extends Module {
   val regBits = (log(xlen)/log(2)).toInt;
   val io = IO(new Bundle {
     val exMemRd = Input(UInt(regBits.W))
-    val exMemRegWEn = Input(Bool)
-    val exMemWBSel = Input(UInt(2.W))
-    val idExRs1 = Input(UInt(regBits.W))
-    val idExRs2 = Input(UInt(regBits.W))
+    val exMemRegfileWEn = Input(Bool())
+    val exMemWbSel = Input(UInt(2.W))
+    val IDExRs1 = Input(UInt(regBits.W))
+    val IDExRs2 = Input(UInt(regBits.W))
 
-    val loadStall = Output(Bool)
+    val loadStall = Output(Bool())
   })
 
-  when ((io.exMemRd === io.idExRs1 | io.exMemRd === io.idExRs2) & io.exMemRegWEn & io.exMemWBSel === 0.U) {
+  when ((io.exMemRd === io.IDExRs1 | io.exMemRd === io.IDExRs2) & io.exMemRegfileWEn & io.exMemWbSel === 0.U) {
     io.loadStall := 1.U
   } .otherwise {
     io.loadStall := 0.U

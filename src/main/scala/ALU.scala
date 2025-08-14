@@ -1,5 +1,5 @@
 import chisel3._
-import chisel3.util.MuxCase
+import chisel3.util._
 
 import scala.math._
 
@@ -7,10 +7,13 @@ class ALU(xlen: Int) extends Module {
   val io = IO(new Bundle {
     val in0 = Input(UInt(xlen.W));
     val in1 = Input(UInt(xlen.W));
-    val aluSel = Input(UInt(4.W));
+    val aluSel = Input(UInt(ALUFunct3.getWidth.W));
+    val signed = Input(Bool())
     val isWide = Input(Bool())
     val out = Output(UInt(xlen.W));
   })
+
+  io.out := 0.U
 
   var numShiftBits = (log(xlen) / log(2)).toInt - 1;
 
@@ -43,19 +46,50 @@ class ALU(xlen: Int) extends Module {
   val xor = io.in0 ^ io.in1;
 
 
-  val v = Wire(Vec(10, UInt(xlen.W)));
+  switch(io.aluSel.asUInt) {
+    is (ALUFunct3.add.asUInt) {
+      when (io.signed) {
+        io.out := sub
+      } .otherwise {
+        io.out := add
+      }
+    }
 
-  v(0) := add;
-  v(1) := sub;
-  v(2) := sll;
-  v(3) := srl;
-  v(4) := sra;
-  v(5) := slt;
-  v(6) := sltu;
-  v(7) := or;
-  v(8) := and;
-  v(9) := xor;
+    is (ALUFunct3.sll.asUInt) {
+      io.out := sll
+    }
 
-  io.out := v(io.aluSel);
+    is (ALUFunct3.slt.asUInt) {
+      io.out := slt
+    }
+
+    is (ALUFunct3.sltu.asUInt) {
+      io.out := sltu
+    }
+
+    is (ALUFunct3.xor.asUInt) {
+      io.out := xor
+    }
+
+    is (ALUFunct3.sr.asUInt) {
+      when (io.signed) {
+        io.out := sra
+      } .otherwise {
+        io.out := srl
+      }
+    }
+
+    is (ALUFunct3.or.asUInt) {
+      io.out := or
+    }
+
+    is (ALUFunct3.and.asUInt) {
+      io.out := and
+    }
+
+    is (ALUFunct3.selB.asUInt) {
+      io.out := io.in1
+    }
+  }
 
 }

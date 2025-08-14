@@ -19,43 +19,43 @@ class ImmGen(xlen: Int) extends Module {
 
   immediate := 0.S
   switch (opcode) {
-    is(0b0010011.U) {
+    is(Opcode.ITypeArith.asUInt) {
       // i-type (arithmetic)
       immediate := iTypeImmediate
     }
-    is(0b0011011.U) {
+    is(Opcode.ITypeWide.asUInt) {
       // i-type (wide)
       immediate := iTypeImmediate
     }
-    is(0b0000011.U) {
+    is(Opcode.ITypeLoad.asUInt) {
       // i-type (loads)
       immediate := iTypeImmediate
     }
-    is(0b0100011.U) {
+    is(Opcode.SType.asUInt) {
       // s-type
       immediate := sTypeImmediate
     }
-    is(0b1100011.U) {
+    is(Opcode.BType.asUInt) {
       // b-type
       immediate := bTypeImmediate
     }
-    is(0b0110111.U) {
+    is(Opcode.UTypeLUI.asUInt) {
       // u-type (lui)
       immediate := uTypeImmediate
     }
-    is(0b0010111.U) {
+    is(Opcode.UTypeAUIPC.asUInt) {
       // u-type (auipc)
       immediate := uTypeImmediate
     }
-    is(0b1101111.U) {
+    is(Opcode.JType.asUInt) {
       // j-type
       immediate := jTypeImmediate
     }
-    is(0b1100111.U) {
+    is(Opcode.ITypeJump.asUInt) {
       // i-type
       immediate := iTypeImmediate
     }
-    is(0b1110011.U) {
+    is(Opcode.CSRType.asUInt) {
       // csr type
       immediate := csrTypeImmediate
     }
