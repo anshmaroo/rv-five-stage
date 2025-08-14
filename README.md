@@ -12,4 +12,3 @@ planned improvements to my three-stage pipeline:
 - hierarchical memory (aiming for at least a direct-mapped L1$)
 - branch speculation
 - superscalar execution
-- out-of-order execution
